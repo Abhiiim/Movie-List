@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Movie List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Search for Movies</h1>
+        <div class="search">
+            <input type="text" id="search-input" class="search-input" placeholder="Movies Title">
+            <button type="button" class="btn" onclick="searchMovies()">Search</button>
+        </div>
+        <div class="list" id="movies-list"></div>
+        <div id="pagination">
+            <button id="prevBtn" onclick="previousPage()">Previous</button>
+            <button id="nextBtn" onclick="nextPage()">Next</button>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
