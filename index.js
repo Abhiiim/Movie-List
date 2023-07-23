@@ -209,32 +209,35 @@ function rateMovie (evt, movie) {
     let rateVal = evt.parentNode.querySelector("input").value;
     let moviesRating = JSON.parse(localStorage.getItem("ratings")) || [];
 
-    // console.log(rateVal);
-    // console.log(moviesRating);
-
-    if (moviesRating.length == 0) {
-        moviesRating.push({
-            imdbID: movie.imdbID,
-            ratings: [rateVal]
-        });
+    if (rateVal < 1 || rateVal > 5) {
+        evt.parentNode.querySelector("input").value = "";
+        alert("Rating should be in between 1 to 5 only");
     } else {
-        let found = 0;
-        for (let i=0; i<moviesRating.length; i++) {
-            if (moviesRating.imdbID == movie.imdbID) {
-                moviesRating.ratings.push(rateVal);
-                found = 1;
-                break;
-            }
-        }
-        if (found == 0) {
+        if (moviesRating.length == 0) {
             moviesRating.push({
                 imdbID: movie.imdbID,
                 ratings: [rateVal]
             });
+        } else {
+            let found = 0;
+            for (let i=0; i<moviesRating.length; i++) {
+                if (moviesRating.imdbID == movie.imdbID) {
+                    moviesRating.ratings.push(rateVal);
+                    found = 1;
+                    break;
+                }
+            }
+            if (found == 0) {
+                moviesRating.push({
+                    imdbID: movie.imdbID,
+                    ratings: [rateVal]
+                });
+            }
         }
+        // console.log(moviesRating);
+        localStorage.setItem("ratings", JSON.stringify(moviesRating));
+        evt.parentNode.querySelector("input").value = "";
+        alert("Your rating is saved. Thanks for provide rating!")
     }
-    // console.log(moviesRating);
-    localStorage.setItem("ratings", JSON.stringify(moviesRating));
-    evt.parentNode.querySelector("input").value = "";
-    alert("Your rating is saved. Thanks for provide rating!")
+
 }
