@@ -1,20 +1,27 @@
+let currentPage = 1;
+
+// Next button click event
+document.getElementById("nextBtn").addEventListener("click", function() {
+    currentPage++;
+    searchMovies();
+});
+
+// Previous button click event
+document.getElementById("prevBtn").addEventListener("click", function() {
+    if (currentPage > 1) {
+        currentPage--;
+        searchMovies();
+    }
+});
 
 function renderMovies (movies) {
-
-    let moviesPerPage = 10;
-    let totalPages = Math.ceil(movies.length / moviesPerPage);
-    let currentPage = 1;
-
     // Function to display items for a given page
-    function displayMovies(page) {
-        let start = (page - 1) * moviesPerPage;
-        let end = start + moviesPerPage;
-        let pageItems = movies.slice(start, end);
+    function displayMovies() {
 
         let list = document.getElementById("movies-list");
         list.innerHTML = "";
 
-        pageItems.forEach(function(movie) {
+        movies.forEach(function(movie) {
             let div1 = document.createElement("div");
             div1.classList.add("movies-list");
 
@@ -55,7 +62,7 @@ function renderMovies (movies) {
             let rateBtn = document.createElement("button");
             rateBtn.innerText = "Rate";
             rateBtn.addEventListener("click", function () {
-                rateMovies(this);
+                rateMovie(this, movie);
             });
             div4.appendChild(rateBtn);
 
@@ -76,32 +83,8 @@ function renderMovies (movies) {
     let pagination = document.getElementById("pagination");
     pagination.style.display = "block";
 
-    // Function to update the display when navigating pages
-    function updatePage() {
-        displayMovies(currentPage);
-        let prevBtn = document.getElementById("prevBtn");
-        let nextBtn = document.getElementById("nextBtn");
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === totalPages;
-    }
+    displayMovies();
 
-    updatePage();
-
-    // Previous button click event
-    document.getElementById("prevBtn").addEventListener("click", function() {
-        if (currentPage > 1) {
-            currentPage--;
-            updatePage();
-        }
-    });
-
-    // Next button click event
-    document.getElementById("nextBtn").addEventListener("click", function() {
-        if (currentPage < totalPages) {
-            currentPage++;
-            updatePage();
-        }
-    });
 }
 
 function searchMovies () {
@@ -110,7 +93,7 @@ function searchMovies () {
     // localStorage.setItem("activity", JSON.stringify(activity));
 
     // for (let i=1; i<5; i++) {
-        let link = "https://www.omdbapi.com/?apikey=f689c2ab&s=" + moviesTitle // + "&page=" + i;
+        let link = "https://www.omdbapi.com/?apikey=f689c2ab&s=" + moviesTitle  + "&page=" + currentPage;
         fetch(link)
             .then((response) => {
                 if (!response.ok) {
@@ -152,7 +135,6 @@ function seeDetails (details, movie) {
 }
 
 function addComments (evt, movie) {
-    console.log(evt);
     let div1 = evt.parentNode.parentNode;
     let div6 = div1.querySelector(".comments");
     let comments = JSON.parse(localStorage.getItem("comments")) || [];
@@ -221,4 +203,38 @@ function addNewComment (evt, movie) {
     let prtBtn = evt.parentNode.parentNode.parentNode.querySelector(".add-comments");
     addComments(prtBtn, movie);
     addComments(prtBtn, movie);
+}
+
+function rateMovie (evt, movie) {
+    let rateVal = evt.parentNode.querySelector("input").value;
+    let moviesRating = JSON.parse(localStorage.getItem("ratings")) || [];
+
+    // console.log(rateVal);
+    // console.log(moviesRating);
+
+    if (moviesRating.length == 0) {
+        moviesRating.push({
+            imdbID: movie.imdbID,
+            ratings: [rateVal]
+        });
+    } else {
+        let found = 0;
+        for (let i=0; i<moviesRating.length; i++) {
+            if (moviesRating.imdbID == movie.imdbID) {
+                moviesRating.ratings.push(rateVal);
+                found = 1;
+                break;
+            }
+        }
+        if (found == 0) {
+            moviesRating.push({
+                imdbID: movie.imdbID,
+                ratings: [rateVal]
+            });
+        }
+    }
+    // console.log(moviesRating);
+    localStorage.setItem("ratings", JSON.stringify(moviesRating));
+    evt.parentNode.querySelector("input").value = "";
+    alert("Your rating is saved. Thanks for provide rating!")
 }
