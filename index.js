@@ -117,6 +117,8 @@ function searchMovies () {
 function seeDetails (details, movie) {
     let div1 = details.parentNode.parentNode;
     let div5 = div1.querySelector(".details");
+    let div6 = div1.querySelector(".comments");
+    div6.innerHTML = "";
 
     if (div5.innerHTML == "") {
         let movieTitle = document.createElement("p");
@@ -140,7 +142,10 @@ function seeDetails (details, movie) {
 function addComments (evt, movie) {
     let div1 = evt.parentNode.parentNode;
     let div6 = div1.querySelector(".comments");
+    let div5 = div1.querySelector(".details");
     let comments = JSON.parse(localStorage.getItem("comments")) || [];
+
+    div5.innerHTML = "";
 
     if (div6.innerHTML == "") {
 
