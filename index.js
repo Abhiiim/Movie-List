@@ -83,6 +83,9 @@ function renderMovies (movies) {
     let pagination = document.getElementById("pagination");
     pagination.style.display = "block";
 
+    let pageNumber = document.getElementById("pageNumber");
+    pageNumber.innerHTML = "Page " + currentPage;
+
     displayMovies();
 
 }
