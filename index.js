@@ -158,7 +158,7 @@ function addComments (evt, movie) {
         newComment.appendChild(commentInput);
 
         let commentBtn = document.createElement("button");
-        commentBtn.innerText = "Comment";
+        commentBtn.innerText = "Add Comment";
         commentBtn.addEventListener("click", function() {
             addNewComment(this, movie);
         });
